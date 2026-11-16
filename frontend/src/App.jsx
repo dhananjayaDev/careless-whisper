@@ -121,8 +121,8 @@ export default function App() {
         <p className="brand">Careless Whisper Lab</p>
         <h1>Delivery receipts as a side channel</h1>
         <p className="lede">
-          Simulated messenger lab. Toggle device state, send noisy vs silent
-          probes, and watch synthetic RTTs — no real WhatsApp or Signal.
+          Simulated lab — noisy vs silent probes, device state, synthetic RTTs
+          (no real WhatsApp / Signal).
         </p>
       </header>
 
@@ -134,8 +134,8 @@ export default function App() {
           <section className="panel">
             <h2>Lab chat probes</h2>
             <p className="sub">
-              Compare actions that notify the victim with silent probes that
-              still produce delivery receipts.
+              Noisy text vs silent react / edit / delete — both still yield
+              receipts.
             </p>
             <div className="actions">
               {ACTIONS.map((a) => (
@@ -168,8 +168,7 @@ export default function App() {
           <section className="panel">
             <h2>Device board</h2>
             <p className="sub">
-              Each online companion device issues its own receipt. Offline
-              devices stay dark until they reconnect.
+              Online companions ack independently; offline stays dark.
             </p>
             <div className="devices">
               {session.devices.map((d) => (
@@ -219,41 +218,56 @@ export default function App() {
           <section className="panel wide">
             <h2>RTT timeline</h2>
             <p className="sub">
-              Screen-off and slower networks raise synthetic round-trip times —
-              the same pattern the paper measured on real messengers.
+              Screen-off / cellular raise synthetic RTT — same shape as the
+              paper.
             </p>
             <div className="chart">
               {chartData.length === 0 ? (
                 <p className="empty">Send a probe to plot receipt RTTs.</p>
               ) : (
-                <ResponsiveContainer width="100%" height={280}>
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#2a3544" />
-                    <XAxis dataKey="label" stroke="#8fa1b3" />
-                    <YAxis
-                      stroke="#8fa1b3"
-                      label={{
-                        value: "RTT (ms)",
-                        angle: -90,
-                        position: "insideLeft",
-                        fill: "#8fa1b3",
-                      }}
-                    />
-                    <Tooltip />
-                    <Legend />
-                    {deviceSeries.map((name, idx) => (
-                      <Line
-                        key={name}
-                        type="monotone"
-                        dataKey={name}
-                        stroke={["#3dd6c6", "#f0a202", "#7aa2ff"][idx % 3]}
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                        connectNulls
+                <div className="chart-wrap">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={chartData}
+                      margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#2a3038" />
+                      <XAxis dataKey="label" stroke="#8b939c" tick={{ fontSize: 10 }} />
+                      <YAxis
+                        stroke="#8b939c"
+                        width={42}
+                        tick={{ fontSize: 10 }}
+                        label={{
+                          value: "ms",
+                          angle: -90,
+                          position: "insideLeft",
+                          fill: "#8b939c",
+                          fontSize: 10,
+                        }}
                       />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
+                      <Tooltip
+                        contentStyle={{
+                          background: "#0e1116",
+                          border: "1px solid #2a3038",
+                          fontFamily: "IBM Plex Mono, monospace",
+                          fontSize: 11,
+                        }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 11 }} />
+                      {deviceSeries.map((name, idx) => (
+                        <Line
+                          key={name}
+                          type="monotone"
+                          dataKey={name}
+                          stroke={["#3dff9a", "#e6b84d", "#9aa4ad"][idx % 3]}
+                          strokeWidth={2}
+                          dot={{ r: 2 }}
+                          connectNulls
+                        />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               )}
             </div>
           </section>
